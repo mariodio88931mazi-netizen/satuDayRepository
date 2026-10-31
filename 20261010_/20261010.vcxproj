@@ -139,11 +139,13 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Config.h" />
     <ClInclude Include="Map.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

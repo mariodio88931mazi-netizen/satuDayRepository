@@ -1,55 +1,62 @@
 #pragma once
-
 #include <vector>
-#include <string>
-using namespace std;
-
+#include "Config.h"
 class Map
 {
 private:
-	//マップチップの番号
-	vector<vector<int>> mapData;
+	//ファイルを読み込み
+	/// <summary>
+	/// ロードマップ
+	/// </summary>
+	/// <param name="filePath">マップCSVファイルパス</param>
+	/// <param name="mapData">マップチップイメージ</param>
+	/// <returns>描画判定</returns>
+	bool LoadMap(const char* filePath, std::vector<std::vector<int>>& mapData);
 
-	//マップの縦横のマスの数
-	vector<vector<int>> hitData;
-	int mapWidth;
-	int mapHeight;
+	/// <summary>
+	/// 描画レイヤー
+	/// </summary>
+	/// <param name="mapData">マップチップイメージ</param>
+	void DrawLayer(const std::vector<std::vector<int>>& mapData) const;
 
-	//マップの大きさ
-	static constexpr int CHIP_SIZE = 64;
+	/// <summary>
+	/// 描画フラグ
+	/// </summary>
+	/// <param name="mapX">X座標</param>
+	/// <param name="mapY">Y座標</param>
+	/// <returns>描画フラグ</returns>
+	bool IsValidMapPosition(int mapX, int mapY) const;
 
-	//csvファイルの読み込み
-	bool LoadCSV(const char* fileName, std::vector<std::vector<int>>& data);
+	int chipImages[Config::MAP_CHIP_IMAGE_COUNT];
+	//マップの内容
+	std::vector<std::vector<int>> backMap;
+	std::vector<std::vector<int>> baseMap;
+	std::vector<std::vector<int>> nearMap;
+
+	int mapXNum;
+	int mapYNum;
+	bool isInitialized;
 public:
+	//コンストラクタ＆デストラクタ
 	Map();
+	~Map();
+
+	//画像とCSVを読み込み
 
 	/// <summary>
-	/// 初期化
+	/// 画像読み込み初期化
 	/// </summary>
-	/// <returns>読み込み不正</returns>
+	/// <returns>初期化内容</returns>
 	bool Init();
-	//マップの描画
-	
-	/// <summary>
-	/// マップの描画
-	/// </summary>
-	/// <param name="cameraX">カメラ座標X</param>
-	/// <param name="cameraY">カメラ座標Y</param>
-	void Draw(float cameraX, float cameraY);
-	/// <summary>
-	/// 通行できるかどうか
-	/// </summary>
-	/// <param name="tileX">タイルX座標</param>
-	/// <param name="tileY">タイルY座標</param>
-	/// <returns>通行可能判定</returns>
-	bool IsSolid(int tileX, int tileY);
+
+	//マップを奥から手前の順に描画
 
 	/// <summary>
-	/// ワールド座標から当たり判定を調べる
+	/// 描画
 	/// </summary>
-	/// <param name="wroldX">ワールド座標X</param>
-	/// <param name="wroldY">ワールド座標Y</param>
-	/// <returns></returns>
-	bool IsSolidAt(float wroldX, float wroldY);
+	void Draw() const;
 
+	//Dxlib終了前に呼び出して画像などを解放
+	void Finalize();
 };
+
